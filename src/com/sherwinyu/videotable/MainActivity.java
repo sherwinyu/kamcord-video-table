@@ -8,16 +8,21 @@ import android.app.Activity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.View;
+import android.view.ViewGroup;
 
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
   ListView listView;
-  StableArrayAdapter adapter;
-  ArrayList<String> list ;
+  VideoCellAdapter adapter;
+  ArrayList<VideoCell> list ;
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -28,13 +33,14 @@ public class MainActivity extends Activity {
     // setupAdapter();
 
     String[] values = new String[] {"abc", "def", "ghi"};
-    list = new ArrayList<String>();
+    list = new ArrayList<VideoCell>();
     for (int i = 0; i < values.length; i++) {
-      list.add(values[i]);
+
+      list.add(new VideoCell("", values[i]));
     }
 
     listView = (ListView) findViewById(R.id.listView);
-    adapter = new StableArrayAdapter(this, android.R.layout.simple_list_item_1, list);
+    adapter = new VideoCellAdapter(this, android.R.layout.simple_list_item_1, list);
     listView.setAdapter(adapter);
 
 
@@ -46,11 +52,22 @@ public class MainActivity extends Activity {
     return true;
   }
 
-  private class StableArrayAdapter extends ArrayAdapter<String> {
+  private class VideoCellAdapter extends ArrayAdapter<VideoCell> {
 
-    HashMap<String, Integer> mIdMap = new HashMap<String, Integer>();
+    Context context;
+    int layoutResourceId;
+    ArrayList<VideoCell> data = null;
 
-    public StableArrayAdapter(Context context, int textViewResourceId,
+    public VideoCellAdapter(Context context, int layoutResourceId, ArrayList<VideoCell> data) {
+      super(context, layoutResourceId, data);
+      this.layoutResourceId = layoutResourceId;
+      this.context = context;
+      this.data = data;
+  }
+
+
+    /*
+    public VideoCellAdapter(Context context, int textViewResourceId,
         List<String> objects) {
       super(context, textViewResourceId, objects);
       for (int i = 0; i < objects.size(); ++i) {
@@ -60,15 +77,41 @@ public class MainActivity extends Activity {
 
     @Override
     public long getItemId(int position) {
-      String item = getItem(position);
+      VideoCell item = getItem(position);
       return mIdMap.get(item);
     }
+    */
 
     @Override
-    public boolean hasStableIds() {
-      return true;
+    public View getView(int idx, View convertView, ViewGroup parent) {
+      View rowView = convertView;
+      VideoCellHolder holder = null;
+
+      if (rowView == null) {
+        LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+        rowView = inflater.inflate(layoutResourceId, parent, false);
+        holder = new VideoCellHolder();
+        holder.thumbnail = (ImageView) rowView.findViewById(R.id.thumbnail);
+        holder.title = (TextView) rowView.findViewById(R.id.title);
+
+        rowView.setTag(holder);
+      }
+      else {
+        holder = (VideoCellHolder) rowView.getTag();
+      }
+      VideoCell videoCell =  data.get(idx);
+      if (videoCell.thumbnail != null)
+        holder.thumbnail.setImageDrawable(videoCell.thumbnail);
+      holder.title.setText(videoCell.title);
+
+      return rowView;
     }
 
+  }
+
+  private class VideoCellHolder {
+    ImageView thumbnail;
+    TextView title;
   }
 
 }

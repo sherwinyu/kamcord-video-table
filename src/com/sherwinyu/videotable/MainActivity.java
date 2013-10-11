@@ -3,11 +3,13 @@ package com.sherwinyu.videotable;
 import java.util.ArrayList;
 
 import android.app.Activity;
-
 import android.os.Bundle;
 import android.view.Menu;
-
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -27,17 +29,18 @@ public class MainActivity extends Activity {
     listView.setAdapter(adapter);
 
     new RetrieveJsonTask(this).execute(adapter);
-    // setupAdapter();
 
-    /*
-    String[] values = new String[] {"abc", "def", "ghi"};
-    list = new ArrayList<VideoCell>();
-    for (int i = 0; i < values.length; i++) {
 
-      list.add(new VideoCell("http://images2.wikia.nocookie.net/__cb20120717192903/dickfigures/images/c/cd/Lynn_Wang.png", values[i]));
-    }
-    */
-
+    listView.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                            int position, long id) {
+                // When clicked, show a toast with the TextView text
+                // String text = listView.data.get(position)
+                String text = "Sup";
+                Toast.makeText(getApplicationContext(),
+                    text, Toast.LENGTH_SHORT).show();
+            }
+    });
 
 
   }

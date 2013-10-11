@@ -39,8 +39,9 @@ public class VideoCellAdapter extends ArrayAdapter<VideoCell> {
   public View getView(int idx, View convertView, ViewGroup parent) {
     View rowView = convertView;
     VideoCellHolder holder = null;
+    VideoCell videoCell = data.get(idx);
 
-    Log.v("kamcord", "VCAdapter.getView(" + idx + ")");
+    Log.v("kamcord", "VCAdapter.getView(" + idx + "): title: " + videoCell.title);
 
     if (rowView == null) {
       LayoutInflater inflater = ((Activity) context).getLayoutInflater();
@@ -56,7 +57,6 @@ public class VideoCellAdapter extends ArrayAdapter<VideoCell> {
       holder = (VideoCellHolder) rowView.getTag();
       Log.v("kamcord", "holder hit: " + holder.title);
     }
-    VideoCell videoCell = data.get(idx);
     if (videoCell.thumbnail != null) {
       holder.thumbnail.setImageDrawable(videoCell.thumbnail);
       Log.v("kamcord", "getView: settingImageDrawable to " + videoCell.imageUrl);

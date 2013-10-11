@@ -12,61 +12,52 @@ import android.widget.VideoView;
 
 public class VideoViewActivity extends Activity {
 
-    // Declare variables
-    ProgressDialog pDialog;
-    VideoView videoview;
+  ProgressDialog progressDialog;
+  VideoView videoView;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.video_view);
+    videoView = (VideoView) findViewById(R.id.video_view);
 
-        Bundle extras = getIntent().getExtras();
-        String videoUrl = extras.getString("videoUrl");
+    // Fetch the videoUrl and videoTitle
+    Bundle extras = getIntent().getExtras();
+    String videoUrl = extras.getString("videoUrl");
+    String videoTitle = extras.getString("videoTitle");
 
-        // Get the layout from video_main.xml
-        setContentView(R.layout.video_view);
-        // Find your VideoView in your video_main.xml layout
-        videoview = (VideoView) findViewById(R.id.VideoView);
-        // Execute StreamVideo AsyncTask
+    // Show a progress bar
+    progressDialog = new ProgressDialog(VideoViewActivity.this);
+    progressDialog.setTitle(videoTitle);
+    progressDialog.setMessage("Buffering...");
+    progressDialog.setIndeterminate(false);
+    progressDialog.setCancelable(true);
+    progressDialog.show();
 
-        // Create a progressbar
-        pDialog = new ProgressDialog(VideoViewActivity.this);
-        // Set progressbar title
-        pDialog.setTitle("Android Video Streaming Tutorial");
-        // Set progressbar message
-        pDialog.setMessage("Buffering...");
-        pDialog.setIndeterminate(false);
-        pDialog.setCancelable(false);
-        // Show progressbar
-        pDialog.show();
+    try {
+      // Start the MediaController
+      MediaController mediacontroller = new MediaController(VideoViewActivity.this);
+      mediacontroller.setAnchorView(videoView);
+      videoView.setMediaController(mediacontroller);
 
-        String text = "Loading video at: " + videoUrl;
-        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+      // Load the video from the URI
+      Uri videoUri = Uri.parse(videoUrl);
+      videoView.setVideoURI(videoUri);
 
-        try {
-            // Start the MediaController
-            MediaController mediacontroller = new MediaController(
-                    VideoViewActivity.this);
-            mediacontroller.setAnchorView(videoview);
-            // Get the URL from String VideoURL
-            Uri videoUri = Uri.parse(videoUrl);
-            videoview.setMediaController(mediacontroller);
-            videoview.setVideoURI(videoUri);
-
-        } catch (Exception e) {
-            Log.e("Error", e.getMessage());
-            e.printStackTrace();
-        }
-
-        videoview.requestFocus();
-        videoview.setOnPreparedListener(new OnPreparedListener() {
-            // Close the progress bar and play the video
-            public void onPrepared(MediaPlayer mp) {
-                pDialog.dismiss();
-                videoview.start();
-            }
-        });
-
+    } catch (Exception e) {
+      Log.e("Error", e.getMessage());
+      e.printStackTrace();
     }
+
+    videoView.requestFocus();
+    videoView.setOnPreparedListener(new OnPreparedListener() {
+      // Close the progress bar and play the video
+      public void onPrepared(MediaPlayer mp) {
+        progressDialog.dismiss();
+        videoView.start();
+      }
+    });
+
+  }
 
 }

@@ -50,13 +50,14 @@ public class VideoCellAdapter extends ArrayAdapter<VideoCell> {
       holder.thumbnail = (ImageView) rowView.findViewById(R.id.videoCellThumbnail);
       holder.title = (TextView) rowView.findViewById(R.id.videoCellTitle);
 
-      Log.v("kamcord", "holder miss: " + holder.title);
+      Log.v("kamcord", "holder miss: " + holder.title.getText());
       rowView.setTag(holder);
     }
     else {
       holder = (VideoCellHolder) rowView.getTag();
-      Log.v("kamcord", "holder hit: " + holder.title);
+      Log.v("kamcord", "holder hit: " + holder.title.getText());
     }
+
     if (videoCell.thumbnail != null) {
       holder.thumbnail.setImageDrawable(videoCell.thumbnail);
       Log.v("kamcord", "getView: settingImageDrawable to " + videoCell.imageUrl);
@@ -64,6 +65,7 @@ public class VideoCellAdapter extends ArrayAdapter<VideoCell> {
       Log.v("kamcord", "getView: noImageFound for video: " + videoCell.title);
     }
     holder.title.setText(videoCell.title);
+    Log.v("kamcord", "holder.title.getText(): " + holder.title.getText());
 
     return rowView;
   }

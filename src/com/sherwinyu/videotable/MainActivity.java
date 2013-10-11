@@ -3,6 +3,7 @@ package com.sherwinyu.videotable;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -32,26 +33,31 @@ public class MainActivity extends Activity {
 
 
     listView.setOnItemClickListener(new OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view,
-                            int position, long id) {
-                // When clicked, show a toast with the TextView text
-                // String text = listView.data.get(position)
-                String text = "Sup";
-                Toast.makeText(getApplicationContext(),
-                    text, Toast.LENGTH_SHORT).show();
-            }
+      public void onItemClick(AdapterView<?> parent, View view,
+        int position, long id) {
+        // String text = listView.data.get(position)
+        String text = "Sup";
+        VideoCell videoCell = adapter.data.get(position);
+        text = "Playing video: " + videoCell.title;
+        Toast.makeText(getApplicationContext(),
+          text, Toast.LENGTH_SHORT).show();
+        launchVideoActivity(MainActivity.this, videoCell);
+      }
     });
 
-
+  }
+  public void launchVideoActivity(MainActivity context, VideoCell videoCell) {
+    Intent intent = new Intent(context, VideoViewActivity.class);
+    intent.putExtra("videoUrl", videoCell.videoUrl);
+    startActivity(intent);
   }
 
-  @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    getMenuInflater().inflate(R.menu.activity_main, menu);
-    return true;
-  }
-
-
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+      getMenuInflater().inflate(R.menu.activity_main, menu);
+      return true;
+    }
+  
 
 }
 

@@ -12,13 +12,15 @@ public class VideoCell {
   public String imageUrl;
   public String title;
   public Drawable thumbnail;
+  public String videoUrl;
 
 
-  public VideoCell(String imageUrl, String title) {
+  public VideoCell(String imageUrl, String title, String videoUrl) {
     Log.v("kamcord", "Creating video cell: imageUrl: " + imageUrl + "|| title: " + title);
     this.imageUrl = imageUrl;
     this.thumbnail = this.imageFromUrl(imageUrl);
     this.title = title;
+    this.videoUrl = videoUrl;
   }
   public Drawable imageFromUrl(String url) {
     Log.v("kamcord", "imageFromUrl entered " + url);

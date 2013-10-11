@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.MediaController;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 public class VideoViewActivity extends Activity {
@@ -15,12 +16,13 @@ public class VideoViewActivity extends Activity {
     ProgressDialog pDialog;
     VideoView videoview;
 
-    // Insert your Video URL
-    String VideoURL = "http://www.androidbegin.com/tutorial/AndroidCommercial.3gp";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Bundle extras = getIntent().getExtras();
+        String videoUrl = extras.getString("videoUrl");
+
         // Get the layout from video_main.xml
         setContentView(R.layout.video_view);
         // Find your VideoView in your video_main.xml layout
@@ -38,15 +40,18 @@ public class VideoViewActivity extends Activity {
         // Show progressbar
         pDialog.show();
 
+        String text = "Loading video at: " + videoUrl;
+        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+
         try {
             // Start the MediaController
             MediaController mediacontroller = new MediaController(
                     VideoViewActivity.this);
             mediacontroller.setAnchorView(videoview);
             // Get the URL from String VideoURL
-            Uri video = Uri.parse(VideoURL);
+            Uri videoUri = Uri.parse(videoUrl);
             videoview.setMediaController(mediacontroller);
-            videoview.setVideoURI(video);
+            videoview.setVideoURI(videoUri);
 
         } catch (Exception e) {
             Log.e("Error", e.getMessage());

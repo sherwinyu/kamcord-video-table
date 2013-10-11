@@ -37,7 +37,8 @@ public class RetrieveJsonTask extends AsyncTask<VideoCellAdapter, Void, String> 
         JSONObject video = videos.getJSONObject(i);
         VideoCell videoCell = new VideoCell(
             video.getString("thumbnail_url"),
-            video.getString("title")
+            video.getString("title"),
+            video.getString("video_url")
             );
         adapter.add(videoCell);
 

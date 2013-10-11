@@ -45,6 +45,8 @@ public class RetrieveJsonTask extends AsyncTask<VideoCellAdapter, Void, String> 
 
       // Iterate over all JSON objets
       // For each object, create a video cell
+      // TODO(syu): Fetch the images in parallel instead of
+      // instantiating the video cells one by one
       for (int i = 0; i <  videos.length(); i++) {
         JSONObject video = videos.getJSONObject(i);
         VideoCell videoCell = new VideoCell(
@@ -71,7 +73,7 @@ public class RetrieveJsonTask extends AsyncTask<VideoCellAdapter, Void, String> 
   }
 
   /**
-   * Makes a request to the json api
+   * Makes a request to the json api.
    * @return string representation of the JSON
    */
   protected String getJson() {
@@ -81,19 +83,21 @@ public class RetrieveJsonTask extends AsyncTask<VideoCellAdapter, Void, String> 
     String url = "http://kamcord.com/api/ingameviewer/feed/?developer_key=e1bf908bf86de49cfe925ca183ef5205&type=trending";
 
     DefaultHttpClient httpclient = new DefaultHttpClient(new BasicHttpParams());
-    HttpGet httppost = new HttpGet(url);
-    httppost.setHeader("Content-type", "application/json");
+    HttpGet httpGet = new HttpGet(url);
+    httpGet.setHeader("Content-type", "application/json");
     InputStream inputStream = null;
 
     String result = null;
     try {
-      HttpResponse response = httpclient.execute(httppost);
+      // Make the request
+      HttpResponse response = httpclient.execute(httpGet);
       HttpEntity entity = response.getEntity();
-
       inputStream = entity.getContent();
       BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"), 8);
+
       StringBuilder sb = new StringBuilder();
       String line = null;
+
       // Append the JSON response
       while ((line = reader.readLine()) != null)
         sb.append(line + "\n");
